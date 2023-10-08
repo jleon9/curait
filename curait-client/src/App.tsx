@@ -1,12 +1,14 @@
 import logo from "./logo.svg"
 import { Counter } from "./features/counter/Counter"
 import "./App.css"
-import Title from "./components/Navbar/hello"
+
+import Navbar from "./components/Home/Navbar/Navbar"
 
 function App() {
+  
   return (
     <>
-      <Title className="title" title="Curait"/>
+      <Navbar className="navbar"/>
     </>
   )
 }
