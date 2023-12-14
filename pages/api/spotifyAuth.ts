@@ -1,45 +1,26 @@
-// pages/api/spotifyAuth.ts
+// pages/api/login.ts
 
 import { NextApiRequest, NextApiResponse } from 'next';
-import axios from 'axios';
 import querystring from 'querystring';
+//import { tokens } from '../../lib/Tokens';
 
 const client_id = process.env.SPOTIFY_ID;
-const client_secret = process.env.SPOTIFY_SECRET;
-const redirect_uri = 'http://localhost:3000/'; // Update with your actual redirect URI
+const redirect_uri = process.env.SPOTIFY_REDIRECT_URI;
+const stateKey = 'spotify_auth_state';
 
-export default async (req: NextApiRequest, res: NextApiResponse) => {
-  if (req.method === 'GET') {
-    // Step 1: Redirect to Spotify authorization URL
-    const state = generateRandomString(16);
-    const scope = 'user-read-private user-read-email'; // Add any additional scopes your app needs
-    const authorizationUrl = 'https://accounts.spotify.com/authorize?' +
-      querystring.stringify({
-        response_type: 'code',
-        client_id,
-        scope,
-        redirect_uri,
-        state,
-      });
+export default (req: NextApiRequest, res: NextApiResponse) => {
+  const state = Math.random().toString(36).substring(2);
+  res.setHeader('Set-Cookie', `${stateKey}=${state}; Path=/`);
 
-    res.redirect(authorizationUrl);
-  } else {
-    res.status(405).end(); // Method Not Allowed
-  }
-};
-
-export const config = {
-  api: {
-    externalResolver: true,
-  },
-};
-
-// Helper function to generate a random string
-const generateRandomString = (length: number): string => {
-  const possibleChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-  let randomString = '';
-  for (let i = 0; i < length; i++) {
-    randomString += possibleChars.charAt(Math.floor(Math.random() * possibleChars.length));
-  }
-  return randomString;
+  const scope = 'user-read-private user-read-email';
+  const authorizationUrl =
+    'https://accounts.spotify.com/authorize?' +
+    querystring.stringify({
+      response_type: 'code',
+      client_id: client_id,
+      scope: scope,
+      redirect_uri: redirect_uri,
+      state: state,
+    });
+  res.redirect(authorizationUrl);
 };
