@@ -12,7 +12,7 @@ export default (req: NextApiRequest, res: NextApiResponse) => {
   const state = Math.random().toString(36).substring(2);
   res.setHeader('Set-Cookie', `${stateKey}=${state}; Path=/`);
 
-  const scope = 'user-read-private user-read-email';
+  const scope = 'playlist-modify-public playlist-modify-private';
   const authorizationUrl =
     'https://accounts.spotify.com/authorize?' +
     querystring.stringify({
