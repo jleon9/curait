@@ -6,52 +6,46 @@ const PlaylistParameters = () => {
           Mood
         </label>
         <br />
-        <input
-          className="text-black"
-          type="text"
-          id="userInput"
-          name="userInput"
-          placeholder="Choose a Mood..."
-        />
-        <br />
+        <select className="m-3 text-black" id="fruits" name="fruits">
+          <option value="chill">chill</option>
+          <option value="dance">dance</option>
+          <option value="hardcore">hardcore</option>
+        </select>
         <br />
         <label className="p-3" htmlFor="userInput">
           Genre
         </label>
         <br />
-        <input
-          className="text-black"
-          type="text"
-          id="userInput"
-          name="userInput"
-          placeholder="Choose a Genre..."
-        />
+        <select className="m-3 text-black" id="fruits" name="fruits">
+          <option value="afrobeat">afrobeat</option>
+          <option value="classical">classical</option>
+          <option value="dancehall">dancehall</option>
+          <option value="electro">electro</option>
+          <option value="funk">funk</option>
+          <option value="soul">soul</option>
+          <option value="rock">rock</option>
+          <option value="pop">pop</option>
+          <option value="jazz">jazz</option>
+          <option value="hip-hop">hip-hop</option>
+        </select>
         <br />
-        <br />
-        <label className="p-3" htmlFor="userInput">
-          Country
+        <label className="m-3" htmlFor="userInput">
+          Culture
         </label>
         <br />
-        <input
-          className="text-black"
-          type="text"
-          id="userInput"
-          name="userInput"
-          placeholder="Choose a Country..."
-        />
+        <select className="m-3 text-black" id="fruits" name="fruits">
+          <option value="brazil">brazil</option>
+          <option value="british">british</option>
+          <option value="french">french</option>
+          <option value="indian">indian</option>
+          <option value="iranian">iranian</option>
+          <option value="latin">latin</option>
+          <option value="malay">malay</option>
+          <option value="swedish">swedish</option>
+          <option value="turkish">turkish</option>
+          <option value="world-music">Any Place</option>
+        </select>
         <br />
-        <br />
-        <label className="p-3" htmlFor="userInput">
-          Language
-        </label>
-        <br />
-        <input
-          className="text-black"
-          type="text"
-          id="userInput"
-          name="userInput"
-          placeholder="Choose a Language..."
-        />
       </form>
       <br />
       <form className="flex items-strech">
