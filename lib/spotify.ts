@@ -72,21 +72,23 @@ export const getRecommendations = async (
   }
 
   switch (includeSongs || includeInstrumentals) {
-    case includeSongs:
+    case includeSongs && !includeInstrumentals:
       targetInstrumentalness = 0;
-    case includeInstrumentals:
+    case !includeSongs && includeInstrumentals:
       targetInstrumentalness = 1;
-    case includeSongs && includeInstrumentals:
+    default:
       targetInstrumentalness = 0.5;
   }
 
   const url = `${apiUrl}?seed_genres=${seedGenres}&target_danceability=${targetDanceability}&target_instrumentalness=${targetInstrumentalness}`;
 
-  return await fetch(url, {
+  const spotifyResponse = await fetch(url, {
     method: 'GET',
     headers: {
       Authorization: `Bearer ${access_token}`,
       'Content-Type': 'application/json',
     },
-  })
+  });
+  //console.log(spotifyResponse.json())
+  return spotifyResponse;
 };

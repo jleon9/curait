@@ -4,26 +4,36 @@ import Playlist from './Playlist';
 
 const PlaylistParameters = () => {
   const [isVisible, setIsVisible] = useState(false);
-  const [mood, setMood] = useState('');
-  const [genre, setGenre] = useState('');
-  const [culture, setCulture] = useState('');
-  const [includeSongs, setIncludeSongs] = useState(false);
-  const [includeInstrumentals, setIncludeInstrumentals] = useState(false);
+  const [formData, setFormData] = useState({
+    mood: 'sleep',
+    genre: 'afrobeat',
+    culture: 'brazil',
+    includeSongs: true,
+    includeInstrumentals: false,
+  });
+
+
+  const handleChange = (e: React.ChangeEvent<HTMLSelectElement | HTMLInputElement>) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
 
   const handleSubmit = async () => {
+    console.log(formData)
     try {
       //console.log('123');
-      const response = await fetch('/api/playlists/recommendations', {
-        method: 'GET',
+      const response = await fetch('/api/userInput/submitForm', {
+        method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-        }
+        },
+        body: JSON.stringify(formData),
       });
 
       if (response.ok) {
         // Handle success
         const data = await response.json();
-        console.log(data)
+        console.log("Server Response: ", data)
+
         setIsVisible(!isVisible);
         const res = await fetch('/api/playlists/newPlaylist');
         console.log(res.json());
@@ -48,8 +58,8 @@ const PlaylistParameters = () => {
           className="m-3 text-black"
           id="mood"
           name="mood"
-          onChange={(e) => setMood(e.target.value)}
-          value={mood}
+          onChange={handleChange}
+          value={formData.mood}
         >
           <option value="sleep">Sleep</option>
           <option value="chill">Chill</option>
@@ -65,8 +75,8 @@ const PlaylistParameters = () => {
           className="m-3 text-black"
           id="genre"
           name="genre"
-          onChange={(e) => setGenre(e.target.value)}
-          value={genre}
+          onChange={handleChange}
+          value={formData.genre}
         >
           <option value="afrobeat">afrobeat</option>
           <option value="classical">classical</option>
@@ -88,8 +98,8 @@ const PlaylistParameters = () => {
           className="m-3 text-black"
           id="culture"
           name="culture"
-          onChange={(e) => setCulture(e.target.value)}
-          value={culture}
+          onChange={handleChange}
+          value={formData.culture}
         >
           <option value="brazil">brazil</option>
           <option value="british">british</option>
@@ -113,7 +123,7 @@ const PlaylistParameters = () => {
               type="checkbox"
               id="songs"
               name="songs"
-              onChange={(e) => setIncludeSongs(e.target.checked)}
+              onChange={handleChange}
             />
             |
           </label>
@@ -125,7 +135,7 @@ const PlaylistParameters = () => {
               type="checkbox"
               id="instrumentals"
               name="instrumentals"
-              onChange={(e) => setIncludeInstrumentals(e.target.checked)}
+              onChange={handleChange}
             />
             |
           </label>
