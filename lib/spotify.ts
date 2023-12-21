@@ -40,8 +40,8 @@ export const createPlaylist = async () => {
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
-      name: 'New Playlist',
-      description: 'New playlist description',
+      name: 'Curaited For You',
+      description: 'Created with Curait',
       public: false,
     }),
   });
@@ -56,19 +56,25 @@ export const getRecommendations = async (
 ) => {
   const { access_token } = await getAccessToken();
   const apiUrl = 'https://api.spotify.com/v1/recommendations';
-  const seedGenres = `${mood},${genre},${culture}`;
+  const seedGenres = `${culture},${genre},${mood},`;
   let targetDanceability;
+  let targetEnergy;
   let targetInstrumentalness;
+  let market = null;
 
   switch (mood) {
     case 'sleep':
       targetDanceability = 0;
+      targetEnergy = 0;
     case 'chill':
       targetDanceability = 0.3;
+      targetEnergy = 0.3;
     case 'dance':
       targetDanceability = 1;
-    case 'hard':
-      targetDanceability = 0.8;
+      targetEnergy = 0.9;
+    case 'hardstyle':
+      targetDanceability = 0.9;
+      targetEnergy = 1;
   }
 
   switch (includeSongs || includeInstrumentals) {
@@ -80,7 +86,32 @@ export const getRecommendations = async (
       targetInstrumentalness = 0.5;
   }
 
-  const url = `${apiUrl}?seed_genres=${seedGenres}&target_danceability=${targetDanceability}&target_instrumentalness=${targetInstrumentalness}`;
+  switch (culture) {
+    case 'brazil':
+      market = 'BR';
+    case 'british':
+      market = 'GB';
+    case 'french':
+      market = 'FR';
+    case 'indian':
+      market = 'IN';
+    case 'iranian':
+      market = 'IR';
+    case 'latin':
+      market = 'CO';
+    case 'malay':
+      market = 'MY';
+    case 'swedish':
+      market = 'SE';
+    case 'turkish':
+      market = 'TR';
+    default:
+      market = null;
+  }
+
+  const url = market
+    ? `${apiUrl}?market=${market}&ESseed_genres=${seedGenres}&target_danceability=${targetDanceability}&target_energy=${targetEnergy}&target_instrumentalness=${targetInstrumentalness}`
+    : `${apiUrl}?seed_genres=${seedGenres}&target_danceability=${targetDanceability}&target_energy=${targetEnergy}&target_instrumentalness=${targetInstrumentalness}`;
 
   const spotifyResponse = await fetch(url, {
     method: 'GET',

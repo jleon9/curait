@@ -4,7 +4,7 @@ import Playlist from './Playlist';
 
 const PlaylistParameters = () => {
   const [isClicked, setIsClicked] = useState(false);
-  const [playlistId, setPlaylistId] = useState('44SAleMvULRSrEAy8U6icX');
+  const [playlistId, setPlaylistId] = useState('');
   const [isVisible, setIsVisible] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [formData, setFormData] = useState({
@@ -14,13 +14,28 @@ const PlaylistParameters = () => {
     includeSongs: true,
     includeInstrumentals: false,
   });
-  const [tracks, setTracks] = useState([]);
 
   const [addTrackData, setAddTrackData] = useState({
     uris: [],
     playlistId: '',
   });
+  const resetToInitialState = () => {
+    setIsClicked(false);
+    setPlaylistId('');
+    setIsVisible(false);
+    setFormData({
+      mood: 'sleep',
+      genre: 'afrobeat',
+      culture: 'brazil',
+      includeSongs: true,
+      includeInstrumentals: false,
+    });
 
+    setAddTrackData({
+      uris: [],
+      playlistId: '',
+    });
+  };
   useEffect(() => {
     // Fetch data when the button is clicked
     if (isClicked && !isVisible) {
@@ -36,7 +51,7 @@ const PlaylistParameters = () => {
   const handleChange = (
     e: React.ChangeEvent<HTMLSelectElement | HTMLInputElement>
   ) => {
-    e.preventDefault();
+    //e.preventDefault();
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
@@ -126,7 +141,7 @@ const PlaylistParameters = () => {
         </select>
         <br />
         <label className="m-3" htmlFor="userInput">
-          Culture
+          Country
         </label>
         <br />
         <select
@@ -183,6 +198,12 @@ const PlaylistParameters = () => {
             onClick={handleClickGenerate}
           >
             Generate
+          </button>{' '}
+          <button
+            className="btn text-white bg-gray-600 hover:bg-gray-700 w-full mb-4 sm:w-auto sm:mb-0"
+            onClick={resetToInitialState}
+          >
+            Clear
           </button>{' '}
           {isVisible && (
             <div className="pt-5">
