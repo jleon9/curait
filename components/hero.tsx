@@ -1,8 +1,7 @@
 import VideoThumb from '@/public/images/hero-image-01.jpg';
 import ModalVideo from '@/components/modal-video';
 import Playlist from './Playlist';
-import Generate from './Generate';
-import PlaylistParameters from './PlaylistParameters';
+import PlaylistParameters from './PlaylistForm';
 
 export default function Hero() {
   return (
@@ -64,7 +63,6 @@ export default function Hero() {
               <PlaylistParameters />
             </div>
             <div className="max-w-xs mx-auto sm:max-w-none sm:flex sm:justify-center p-5">
-              <Generate />
               {/*}
               <div data-aos="fade-up" data-aos-delay="600">
                 <a className="btn text-white bg-gray-700 hover:bg-gray-800 w-full sm:w-auto sm:ml-4" href="#0">Learn More</a>

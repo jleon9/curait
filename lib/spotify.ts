@@ -33,7 +33,6 @@ export const topTracks = async () => {
 
 export const createPlaylist = async () => {
   const { access_token } = await getAccessToken();
-
   return await fetch('https://api.spotify.com/v1/me/playlists', {
     method: 'POST',
     headers: {
@@ -48,19 +47,46 @@ export const createPlaylist = async () => {
   });
 };
 
-export const getRecommendations = async () => {
-    const { access_token } = await getAccessToken();
-  
-    return await fetch('https://api.spotify.com/v1/me/playlists', {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${access_token}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        name: 'New Playlist',
-        description: 'New playlist description',
-        public: false,
-      }),
-    });
-  };
+export const getRecommendations = async (
+  mood: string,
+  genre: string,
+  culture: string,
+  includeSongs: boolean,
+  includeInstrumentals: boolean
+) => {
+  const { access_token } = await getAccessToken();
+  const apiUrl = 'https://api.spotify.com/v1/recommendations';
+  const seedGenres = `${mood},${genre},${culture}`;
+  let targetDanceability;
+  let targetInstrumentalness;
+
+  switch (mood) {
+    case 'sleep':
+      targetDanceability = 0;
+    case 'chill':
+      targetDanceability = 0.3;
+    case 'dance':
+      targetDanceability = 1;
+    case 'hard':
+      targetDanceability = 0.8;
+  }
+
+  switch (includeSongs || includeInstrumentals) {
+    case includeSongs:
+      targetInstrumentalness = 0;
+    case includeInstrumentals:
+      targetInstrumentalness = 1;
+    case includeSongs && includeInstrumentals:
+      targetInstrumentalness = 0.5;
+  }
+
+  const url = `${apiUrl}?seed_genres=${seedGenres}&target_danceability=${targetDanceability}&target_instrumentalness=${targetInstrumentalness}`;
+
+  return await fetch(url, {
+    method: 'GET',
+    headers: {
+      Authorization: `Bearer ${access_token}`,
+      'Content-Type': 'application/json',
+    },
+  })
+};
