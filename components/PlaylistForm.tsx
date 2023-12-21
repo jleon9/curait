@@ -6,7 +6,7 @@ const PlaylistParameters = () => {
   const [isClicked, setIsClicked] = useState(false);
   const [playlistId, setPlaylistId] = useState('');
   const [isVisible, setIsVisible] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
     mood: 'sleep',
     genre: 'afrobeat',
@@ -35,10 +35,12 @@ const PlaylistParameters = () => {
       uris: [],
       playlistId: '',
     });
+    setIsLoading(false);
   };
   useEffect(() => {
     // Fetch data when the button is clicked
     if (isClicked && !isVisible) {
+      setIsLoading(true);
       handleSubmit();
     }
   }, [isClicked, isVisible]);
@@ -88,6 +90,7 @@ const PlaylistParameters = () => {
         });
 
         setIsVisible(true);
+        setIsLoading(false);
       } else {
         // Handle error
         console.error('Error:', formResponse.statusText);
@@ -208,6 +211,12 @@ const PlaylistParameters = () => {
           {isVisible && (
             <div className="pt-5">
               <Playlist id={playlistId} />
+            </div>
+          )}
+          {isLoading && (
+            <div>
+              <br />
+              <div>Loading...</div>
             </div>
           )}
         </div>
