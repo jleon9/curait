@@ -28,7 +28,7 @@ const PlaylistParameters = () => {
     }
   }, [isClicked, isVisible]);
 
-  const handleClickGenerate = (e: React.ChangeEvent<HTMLButtonElement>) => {
+  const handleClickGenerate = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     setIsClicked(!isClicked);
   };
