@@ -92,3 +92,21 @@ export const getRecommendations = async (
   //console.log(spotifyResponse.json())
   return spotifyResponse;
 };
+
+export const addTracks = async (uris: ['string'], playlistId: string) => {
+  const { access_token } = await getAccessToken();
+  const apiUrl = `https://api.spotify.com/v1/playlists/${playlistId}/tracks`;
+  const requestBody = {
+    uris: uris,
+    position: 0,
+  };
+
+  return fetch(apiUrl, {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${access_token}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(requestBody),
+  });
+};

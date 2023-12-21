@@ -3,11 +3,15 @@ import { Spotify } from 'react-spotify-embed';
 //import createPlaylist from '@/utils/createPlaylist';
 import { tokens } from '@/lib/Tokens';
 
-const Playlist = () => {
-  
+interface PlaylistProps {
+  id: string
+}
+
+const Playlist = (playlistParams: PlaylistProps) => {
+  const playlistLink = `https://open.spotify.com/playlist/${playlistParams.id}`
     return (
       <div>
-        <Spotify link="https://open.spotify.com/playlist/1iktniobPRRpPtjiV3QJv0" />
+        <Spotify link={playlistLink}/>
       </div>
     );
 };

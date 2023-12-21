@@ -1,6 +1,6 @@
 // pages/api/submitForm.ts
 import { NextApiRequest, NextApiResponse } from 'next';
-import { getRecommendations } from '@/lib/spotify';
+import { addTracks } from '@/lib/spotify';
 
 export default async function handler(
   req: NextApiRequest,
@@ -9,22 +9,14 @@ export default async function handler(
   if (req.method === 'POST') {
     try {
       // Access form data from req.body
-      const { mood, genre, culture, includeSongs, includeInstrumentals } =
-        req.body;
-      //console.log(mood);
+      const { trackUriList, listId } = req.body;
+      console.log(req.body.playlistId);
       // Perform server-side logic using the form data
-      const result = await getRecommendations(
-        mood,
-        genre,
-        culture,
-        includeSongs,
-        includeInstrumentals
-      );
-      // Use result.json() to extract JSON data from the response
-      const resultData = await result.json();
-      //console.log(resultData);
+      const response = await addTracks(trackUriList, listId);
+      const updatedPlaylist = await response.json()
+      //console.log(updatedPlaylist)
       // Send a response back to the client
-      res.status(200).json({ success: true, resultData });
+      res.status(200).json({ success: true, updatedPlaylist });
     } catch (error) {
       console.error('Error:', error);
       res

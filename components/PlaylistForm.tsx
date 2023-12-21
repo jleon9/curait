@@ -1,9 +1,12 @@
 'use client';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Playlist from './Playlist';
 
 const PlaylistParameters = () => {
+  const [isClicked, setIsClicked] = useState(false);
+  const [playlistId, setPlaylistId] = useState('44SAleMvULRSrEAy8U6icX');
   const [isVisible, setIsVisible] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [formData, setFormData] = useState({
     mood: 'sleep',
     genre: 'afrobeat',
@@ -11,17 +14,35 @@ const PlaylistParameters = () => {
     includeSongs: true,
     includeInstrumentals: false,
   });
+  const [tracks, setTracks] = useState([]);
 
+  const [addTrackData, setAddTrackData] = useState({
+    uris: [],
+    playlistId: '',
+  });
 
-  const handleChange = (e: React.ChangeEvent<HTMLSelectElement | HTMLInputElement>) => {
+  useEffect(() => {
+    // Fetch data when the button is clicked
+    if (isClicked && !isVisible) {
+      handleSubmit();
+    }
+  }, [isClicked, isVisible]);
+
+  const handleClickGenerate = (e: React.ChangeEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    setIsClicked(!isClicked);
+  };
+
+  const handleChange = (
+    e: React.ChangeEvent<HTMLSelectElement | HTMLInputElement>
+  ) => {
+    e.preventDefault();
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
   const handleSubmit = async () => {
-    console.log(formData)
     try {
-      //console.log('123');
-      const response = await fetch('/api/userInput/submitForm', {
+      const formResponse = await fetch('/api/userInput/submitForm', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -29,18 +50,32 @@ const PlaylistParameters = () => {
         body: JSON.stringify(formData),
       });
 
-      if (response.ok) {
-        // Handle success
-        const data = await response.json();
-        console.log("Server Response: ", data)
+      if (formResponse.ok) {
+        const recommendedData = await formResponse.json();
+        console.log('Server Response: ', recommendedData);
+        const newPlaylistResponse = await fetch('/api/playlists/newPlaylist');
+        const newPlaylistData = await newPlaylistResponse.json();
+        console.log('New Playlist Data:', newPlaylistData);
+        const listId = newPlaylistData['id'] as string;
+        setPlaylistId(listId);
 
-        setIsVisible(!isVisible);
-        const res = await fetch('/api/playlists/newPlaylist');
-        console.log(res.json());
-        //console.log('123');
+        const trackList = recommendedData.resultData.tracks;
+        const trackUriList = trackList.map((track: any) => track.uri);
+        setAddTrackData({ uris: trackUriList, playlistId: listId });
+        //console.log(JSON.stringify({ trackUriList, listId }))
+
+        const updatePlaylist = await fetch('/api/playlists/addTracks', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ trackUriList, listId }),
+        });
+
+        setIsVisible(true);
       } else {
         // Handle error
-        console.error('Error:', response.statusText);
+        console.error('Error:', formResponse.statusText);
       }
     } catch (error) {
       console.error('Error:', error);
@@ -145,13 +180,13 @@ const PlaylistParameters = () => {
         <div data-aos="fade-up" data-aos-delay="400">
           <button
             className="btn text-white bg-purple-600 hover:bg-purple-700 w-full mb-4 sm:w-auto sm:mb-0"
-            onClick={handleSubmit}
+            onClick={handleClickGenerate}
           >
             Generate
           </button>{' '}
           {isVisible && (
             <div className="pt-5">
-              <Playlist />
+              <Playlist id={playlistId} />
             </div>
           )}
         </div>
