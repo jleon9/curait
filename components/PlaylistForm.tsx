@@ -7,7 +7,7 @@ import initAudioContext from '@/utils/audioContext';
 
 const PlaylistParameters = () => {
   const [isClicked, setIsClicked] = useState(false);
-  const [playlistId, setPlaylistId] = useState('');
+  const [playlistId, setPlaylistId] = useState('1XBH32PV1A3WBxJ455KeJR');
   const [isVisible, setIsVisible] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
@@ -211,11 +211,6 @@ const PlaylistParameters = () => {
           >
             Clear
           </button>{' '}
-          {
-            isClicked && (
-              <AudioPlayer/>
-            )
-          }
           {!isLoading && isClicked && isVisible && (
             <div className="pt-5">
               <Playlist id={playlistId} />
