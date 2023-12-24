@@ -1,6 +1,9 @@
 'use client';
 import { useEffect, useState } from 'react';
 import Playlist from './Playlist';
+import AudioPlayer from './AudioPlayer';
+import { initialize } from 'next/dist/server/lib/render-server';
+import initAudioContext from '@/utils/audioContext';
 
 const PlaylistParameters = () => {
   const [isClicked, setIsClicked] = useState(false);
@@ -40,6 +43,7 @@ const PlaylistParameters = () => {
   useEffect(() => {
     // Fetch data when the button is clicked
     if (isClicked && !isVisible) {
+      initAudioContext()
       setIsLoading(true);
       handleSubmit();
     }
@@ -208,6 +212,11 @@ const PlaylistParameters = () => {
           >
             Clear
           </button>{' '}
+          {
+            isClicked && (
+              <AudioPlayer/>
+            )
+          }
           {isVisible && (
             <div className="pt-5">
               <Playlist id={playlistId} />

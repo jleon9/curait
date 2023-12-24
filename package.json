@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "preview": "next build && next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "start:prod": "NODE_ENV=production next start"
   },
   "dependencies": {
     "@headlessui/react": "^1.7.14",
