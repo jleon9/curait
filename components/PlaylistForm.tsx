@@ -43,7 +43,6 @@ const PlaylistParameters = () => {
   useEffect(() => {
     // Fetch data when the button is clicked
     if (isClicked && !isVisible) {
-      initAudioContext()
       setIsLoading(true);
       handleSubmit();
     }
@@ -217,7 +216,7 @@ const PlaylistParameters = () => {
               <AudioPlayer/>
             )
           }
-          {isVisible && (
+          {!isLoading && isClicked && isVisible && (
             <div className="pt-5">
               <Playlist id={playlistId} />
             </div>

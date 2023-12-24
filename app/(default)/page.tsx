@@ -13,11 +13,11 @@ import { tokens } from '@/lib/Tokens';
 import AudioPlayer from '@/components/AudioPlayer';
 
 export default function Home() {
-  
   //console.log()
   return (
     <>
-      <Hero/>
+      <AudioPlayer />
+      <Hero />
       {}
       <Zigzag />
       {/*<Testimonials />*/}
