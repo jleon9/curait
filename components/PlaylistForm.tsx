@@ -1,13 +1,11 @@
 'use client';
 import { useEffect, useState } from 'react';
 import Playlist from './Playlist';
-import AudioPlayer from './AudioPlayer';
-import { initialize } from 'next/dist/server/lib/render-server';
-import initAudioContext from '@/utils/audioContext';
 
 const PlaylistParameters = () => {
+  let listId = '';
   const [isClicked, setIsClicked] = useState(false);
-  const [playlistId, setPlaylistId] = useState('1XBH32PV1A3WBxJ455KeJR');
+  const [playlistId, setPlaylistId] = useState('');
   const [isVisible, setIsVisible] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
@@ -18,10 +16,6 @@ const PlaylistParameters = () => {
     includeInstrumentals: false,
   });
 
-  const [addTrackData, setAddTrackData] = useState({
-    uris: [],
-    playlistId: '',
-  });
   const resetToInitialState = () => {
     setIsClicked(false);
     setPlaylistId('');
@@ -34,12 +28,9 @@ const PlaylistParameters = () => {
       includeInstrumentals: false,
     });
 
-    setAddTrackData({
-      uris: [],
-      playlistId: '',
-    });
     setIsLoading(false);
   };
+
   useEffect(() => {
     // Fetch data when the button is clicked
     if (isClicked && !isVisible) {
@@ -72,16 +63,15 @@ const PlaylistParameters = () => {
 
       if (formResponse.ok) {
         const recommendedData = await formResponse.json();
-        console.log('Server Response: ', recommendedData);
+        //console.log('Server Response: ', recommendedData);
         const newPlaylistResponse = await fetch('/api/playlists/newPlaylist');
         const newPlaylistData = await newPlaylistResponse.json();
-        console.log('New Playlist Data:', newPlaylistData);
-        const listId = newPlaylistData['id'] as string;
-        setPlaylistId(listId);
+        //console.log('New Playlist Data:', newPlaylistData);
+        listId = newPlaylistData['id'] as string;
 
         const trackList = recommendedData.resultData.tracks;
         const trackUriList = trackList.map((track: any) => track.uri);
-        setAddTrackData({ uris: trackUriList, playlistId: listId });
+        //setAddTrackData({ uris: trackUriList, playlistId: listId });
         //console.log(JSON.stringify({ trackUriList, listId }))
 
         const updatePlaylist = await fetch('/api/playlists/addTracks', {
@@ -91,9 +81,6 @@ const PlaylistParameters = () => {
           },
           body: JSON.stringify({ trackUriList, listId }),
         });
-
-        setIsVisible(true);
-        setIsLoading(false);
       } else {
         // Handle error
         console.error('Error:', formResponse.statusText);
@@ -101,12 +88,15 @@ const PlaylistParameters = () => {
     } catch (error) {
       console.error('Error:', error);
     }
+    setPlaylistId(listId);
+    setIsLoading(false);
+    setIsVisible(true);
   };
 
   return (
     <div data-aos="fade-up" data-aos-delay="400">
       <form onSubmit={(e) => e.preventDefault()}>
-        <label className="p-3" htmlFor="userInput">
+        <label className="p-3" htmlFor="mood">
           Mood
         </label>
         <br />
@@ -123,7 +113,7 @@ const PlaylistParameters = () => {
           <option value="hardstyle">Hard</option>
         </select>
         <br />
-        <label className="p-3" htmlFor="userInput">
+        <label className="p-3" htmlFor="genre">
           Genre
         </label>
         <br />
@@ -146,13 +136,13 @@ const PlaylistParameters = () => {
           <option value="hip-hop">hip-hop</option>
         </select>
         <br />
-        <label className="m-3" htmlFor="userInput">
+        <label className="m-3" htmlFor="country">
           Country
         </label>
         <br />
         <select
           className="m-3 text-black"
-          id="culture"
+          id="country"
           name="culture"
           onChange={handleChange}
           value={formData.culture}
@@ -211,11 +201,15 @@ const PlaylistParameters = () => {
           >
             Clear
           </button>{' '}
-          {!isLoading && isClicked && isVisible && (
-            <div className="pt-5">
-              <Playlist id={playlistId} />
-            </div>
-          )}
+          {!isLoading &&
+            isClicked &&
+            isVisible &&
+            playlistId != '' &&
+            playlistId && (
+              <div className="pt-5">
+                <Playlist id={playlistId} />
+              </div>
+            )}
           {isLoading && (
             <div>
               <br />
