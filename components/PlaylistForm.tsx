@@ -1,8 +1,21 @@
 'use client';
 import { useEffect, useState } from 'react';
-import Playlist from './Playlist';
+import Playlist from './Playlist'; 
+import { Spotify } from 'react-spotify-embed';
+
 
 const PlaylistParameters = () => {
+  async function getServerSideProps() {
+    // Fetch data from an API or database
+    const id = listId;
+  
+    return {
+      props: {
+        id,
+      },
+    };
+  }
+
   let listId = '';
   const [isClicked, setIsClicked] = useState(false);
   const [playlistId, setPlaylistId] = useState('');
@@ -207,7 +220,9 @@ const PlaylistParameters = () => {
             playlistId != '' &&
             playlistId && (
               <div className="pt-5">
-                <Playlist id={playlistId} />
+                <div>
+                  <Spotify link="https://open.spotify.com/playlist/1bFsVXI4tqrUBik9w6291g"/>
+                </div>
               </div>
             )}
           {isLoading && (

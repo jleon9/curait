@@ -2,7 +2,7 @@
 module.exports = {
     // Your other configurations...
     cssModules: true,
-    webpack(config, { buildId, dev, isServer, defaultLoaders, webpack }) {
+    webpack(config) {
         console.log('Building with config:', config);
         return config;
       },
