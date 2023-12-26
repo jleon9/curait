@@ -21,6 +21,7 @@ const PlaylistParameters = () => {
   const [playlistId, setPlaylistId] = useState('');
   const [isVisible, setIsVisible] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [playlistLink, setPlaylistLink] = useState('');
   const [formData, setFormData] = useState({
     mood: 'sleep',
     genre: 'afrobeat',
@@ -51,6 +52,13 @@ const PlaylistParameters = () => {
       handleSubmit();
     }
   }, [isClicked, isVisible]);
+
+  useEffect(() => {
+    // Render the Spotify component once the link is available
+    if (playlistLink && !isLoading) {
+      setIsVisible(true);
+    }
+  }, [playlistLink, isLoading]);
 
   const handleClickGenerate = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
@@ -102,8 +110,9 @@ const PlaylistParameters = () => {
       console.error('Error:', error);
     }
     setPlaylistId(listId);
+    setPlaylistLink(`https://open.spotify.com/playlist/${listId}`);
     setIsLoading(false);
-    setIsVisible(true);
+    //setIsVisible(true);
   };
 
   return (
@@ -221,7 +230,7 @@ const PlaylistParameters = () => {
             playlistId && (
               <div className="pt-5">
                 <div>
-                  <Spotify link={`https://open.spotify.com/playlist/${playlistId}`}/>
+                  <Spotify link={playlistLink}/>
                 </div>
               </div>
             )}
