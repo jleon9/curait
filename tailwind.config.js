@@ -2,8 +2,7 @@
 module.exports = {
   content: [
     './app/**/*.{js,ts,jsx,tsx}',
-    './app/pages/api/*.{js,ts,jsx,tsx}',
-    './components/**/*.{js,ts,jsx,tsx}',
+    './components/ui/*.{js,ts,jsx,tsx}',
   ],
   theme: {
     extend: {
