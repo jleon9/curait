@@ -1,14 +1,13 @@
 'use client';
 import { useEffect, useState } from 'react';
-import Playlist from './Playlist'; 
+import Playlist from './Playlist';
 import { Spotify } from 'react-spotify-embed';
-
 
 const PlaylistParameters = () => {
   async function getServerSideProps() {
     // Fetch data from an API or database
     const id = listId;
-  
+
     return {
       props: {
         id,
@@ -110,7 +109,7 @@ const PlaylistParameters = () => {
       console.error('Error:', error);
     }
     setPlaylistId(listId);
-    setPlaylistLink(`https://open.spotify.com/playlist/${listId}`);
+    setPlaylistLink(`https://open.spotify.com/embed/playlist/${listId}`);
     setIsLoading(false);
     //setIsVisible(true);
   };
@@ -229,9 +228,14 @@ const PlaylistParameters = () => {
             playlistId != '' &&
             playlistId && (
               <div className="pt-5">
-                <div>
-                  <Spotify link={playlistLink}/>
-                </div>
+                <iframe
+                  src={playlistLink}
+                  width="300"
+                  height="380"
+                  frameBorder="0"
+                  allowTransparency={true}
+                  allow="encrypted-media"
+                ></iframe>
               </div>
             )}
           {isLoading && (
