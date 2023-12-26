@@ -215,37 +215,37 @@ const PlaylistParameters = () => {
             onClick={handleClickGenerate}
           >
             Generate
-          </button>{' '}
+          </button>
           <button
             className="btn text-white bg-gray-600 hover:bg-gray-700 w-full mb-4 sm:w-auto sm:mb-0"
             onClick={resetToInitialState}
           >
             Clear
-          </button>{' '}
-          {!isLoading &&
-            isClicked &&
-            isVisible &&
-            playlistId != '' &&
-            playlistId && (
-              <div className="pt-5">
-                <iframe
-                  src={playlistLink}
-                  width="300"
-                  height="380"
-                  frameBorder="0"
-                  allowTransparency={true}
-                  allow="encrypted-media"
-                ></iframe>
-              </div>
-            )}
-          {isLoading && (
-            <div>
-              <br />
-              <div>Loading...</div>
-            </div>
-          )}
+          </button>
         </div>
       </form>
+      {!isLoading &&
+        isClicked &&
+        isVisible &&
+        playlistId != '' &&
+        playlistId && (
+          <div className="pt-5">
+            <iframe
+              src={playlistLink}
+              width="300"
+              height="380"
+              frameBorder="0"
+              allow="encrypted-media"
+              sandbox="allow-scripts allow-same-origin"
+            ></iframe>
+          </div>
+        )}
+      {isLoading && (
+        <div>
+          <br />
+          <div>Loading...</div>
+        </div>
+      )}
     </div>
   );
 };
