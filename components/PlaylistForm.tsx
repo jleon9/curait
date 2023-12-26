@@ -221,7 +221,7 @@ const PlaylistParameters = () => {
             playlistId && (
               <div className="pt-5">
                 <div>
-                  <Spotify link="https://open.spotify.com/playlist/1bFsVXI4tqrUBik9w6291g"/>
+                  <Spotify link={`https://open.spotify.com/playlist/${playlistId}`}/>
                 </div>
               </div>
             )}
