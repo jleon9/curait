@@ -1,6 +1,6 @@
 import VideoThumb from '@/public/images/hero-image-01.jpg';
-import ModalVideo from '@/components/modal-video';
-import Playlist from './Playlist';
+//import ModalVideo from '@/components/modal-video';
+//import Playlist from './Playlist';
 import PlaylistParameters from './PlaylistForm';
 
 export default function Hero() {

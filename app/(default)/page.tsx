@@ -7,7 +7,7 @@ import Hero from '@/components/hero';
 import Newsletter from '@/components/newsletter';
 import Zigzag from '@/components/zigzag';
 import Testimonials from '@/components/testimonials';
-import Playlist from '@/components/Playlist';
+//import Playlist from '@/components/Playlist';
 //import createPlaylist from '@/utils/createPlaylist';
 import { tokens } from '@/lib/Tokens';
 import AudioPlayer from '@/components/AudioPlayer';

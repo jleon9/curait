@@ -1,7 +1,5 @@
 'use client';
 import { Suspense, useEffect, useState } from 'react';
-import Playlist from './Playlist';
-import { Spotify } from 'react-spotify-embed';
 
 const PlaylistParameters = () => {
   async function getServerSideProps() {
