@@ -1,18 +1,13 @@
 'use client';
+import dynamic from 'next/dynamic';
 import { Suspense, useEffect, useState } from 'react';
 
+const Playlist = dynamic(() => import('../components/Playlist'), {
+  loading: () => <p>Loading...</p>,
+  ssr: true,
+});
+
 const PlaylistParameters = () => {
-  async function getServerSideProps() {
-    // Fetch data from an API or database
-    const id = listId;
-
-    return {
-      props: {
-        id,
-      },
-    };
-  }
-
   let listId = '';
   const [isClicked, setIsClicked] = useState(false);
   const [playlistId, setPlaylistId] = useState('');
@@ -230,14 +225,7 @@ const PlaylistParameters = () => {
       playlistLink &&
       playlistLink != '' ? (
         <Suspense fallback={<div>Loading...</div>}>
-          <iframe
-            src={playlistLink}
-            width="300"
-            height="380"
-            frameBorder="0"
-            allow="encrypted-media"
-            sandbox="allow-scripts allow-same-origin"
-          ></iframe>
+          <Playlist playlistLink={playlistLink} />
         </Suspense>
       ) : (
         <></>
