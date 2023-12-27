@@ -1,5 +1,5 @@
 'use client';
-import { useEffect, useState } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 import Playlist from './Playlist';
 import { Spotify } from 'react-spotify-embed';
 
@@ -225,23 +225,25 @@ const PlaylistParameters = () => {
         </div>
       </form>
       {!isLoading &&
-        isClicked &&
-        isVisible &&
-        playlistId != '' &&
-        playlistId && (
-          <div className="pt-5">
-            {playlistLink && playlistLink != ''  ? (
-              <iframe
-                src={playlistLink}
-                width="300"
-                height="380"
-                frameBorder="0"
-                allow="encrypted-media"
-                sandbox="allow-scripts allow-same-origin"
-              ></iframe>
-            ) : (<></>)}
-          </div>
-        )}
+      isClicked &&
+      isVisible &&
+      playlistId != '' &&
+      playlistId &&
+      playlistLink &&
+      playlistLink != '' ? (
+        <Suspense fallback={<div>Loading...</div>}>
+          <iframe
+            src={playlistLink}
+            width="300"
+            height="380"
+            frameBorder="0"
+            allow="encrypted-media"
+            sandbox="allow-scripts allow-same-origin"
+          ></iframe>
+        </Suspense>
+      ) : (
+        <></>
+      )}
       {isLoading && (
         <div>
           <br />
