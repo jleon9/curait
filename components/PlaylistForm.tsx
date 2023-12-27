@@ -230,7 +230,7 @@ const PlaylistParameters = () => {
         playlistId != '' &&
         playlistId && (
           <div className="pt-5">
-            {playlistLink && playlistLink != '' && (
+            {playlistLink && playlistLink != ''  ? (
               <iframe
                 src={playlistLink}
                 width="300"
@@ -239,7 +239,7 @@ const PlaylistParameters = () => {
                 allow="encrypted-media"
                 sandbox="allow-scripts allow-same-origin"
               ></iframe>
-            )}
+            ) : (<></>)}
           </div>
         )}
       {isLoading && (
