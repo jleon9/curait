@@ -10,7 +10,7 @@ const Playlist = (props: PlaylistProps) => {
       height="380"
       frameBorder="0"
       allow="encrypted-media"
-      sandbox="allow-scripts allow-same-origin"
+      sandbox="allow-scripts allow-same-origin allow-popups"
     ></iframe>
   );
 };
