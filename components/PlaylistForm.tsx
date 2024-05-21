@@ -1,6 +1,7 @@
 'use client';
 import dynamic from 'next/dynamic';
 import { Suspense, useEffect, useState } from 'react';
+import DropdownArrow from './DropdownArrow';
 
 const Playlist = dynamic(() => import('../components/Playlist'), {
   loading: () => <p>Loading...</p>,
@@ -108,135 +109,168 @@ const PlaylistParameters = () => {
   };
 
   return (
-    <div data-aos="fade-up" data-aos-delay="400">
-      <form onSubmit={(e) => e.preventDefault()}>
-        <label className="p-3" htmlFor="mood">
-          Mood
-        </label>
-        <br />
-        <select
-          className="m-3 text-black"
-          id="mood"
-          name="mood"
-          onChange={handleChange}
-          value={formData.mood}
+    <main className="p-12">
+      <div
+        className="grid justify-items-center"
+        data-aos="fade-up"
+        data-aos-delay="400"
+      >
+        <form
+          className="grid content-center"
+          onSubmit={(e) => e.preventDefault()}
         >
-          <option value="sleep">Sleep</option>
-          <option value="chill">Chill</option>
-          <option value="dance">Dance</option>
-          <option value="hardstyle">Hard</option>
-        </select>
-        <br />
-        <label className="p-3" htmlFor="genre">
-          Genre
-        </label>
-        <br />
-        <select
-          className="m-3 text-black"
-          id="genre"
-          name="genre"
-          onChange={handleChange}
-          value={formData.genre}
-        >
-          <option value="afrobeat">afrobeat</option>
-          <option value="classical">classical</option>
-          <option value="dancehall">dancehall</option>
-          <option value="electro">electro</option>
-          <option value="funk">funk</option>
-          <option value="soul">soul</option>
-          <option value="rock">rock</option>
-          <option value="pop">pop</option>
-          <option value="jazz">jazz</option>
-          <option value="hip-hop">hip-hop</option>
-        </select>
-        <br />
-        <label className="m-3" htmlFor="country">
-          Country
-        </label>
-        <br />
-        <select
-          className="m-3 text-black"
-          id="country"
-          name="culture"
-          onChange={handleChange}
-          value={formData.culture}
-        >
-          <option value="brazil">brazil</option>
-          <option value="british">british</option>
-          <option value="french">french</option>
-          <option value="indian">indian</option>
-          <option value="iranian">iranian</option>
-          <option value="latin">latin</option>
-          <option value="malay">malay</option>
-          <option value="swedish">swedish</option>
-          <option value="turkish">turkish</option>
-          <option value="world-music">Any Place</option>
-        </select>
-        <br />
-        <br />
-        <div className="flex items-strech">
-          <p className="flex items-center">|</p>
-          <label className="ml-3" htmlFor="songs">
-            Songs
-            <input
-              className="m-3"
-              type="checkbox"
-              id="songs"
-              name="songs"
-              onChange={handleChange}
-            />
-            |
-          </label>
+          <div className="pt-12 pb-8">
+            <label className="font-bold" htmlFor="mood">
+              Mood
+            </label>
+
+            <div className="relative inline-block w-full mt-3">
+              <select
+                className="block appearance-none w-full bg-white border border-gray-300 hover:border-gray-500 px-4 py-2 pr-8 rounded-md shadow leading-tight focus:outline-none focus:shadow-outline text-black"
+                id="mood"
+                name="mood"
+                onChange={handleChange}
+                value={formData.mood}
+              >
+                <option value="sleep">Sleep</option>
+                <option value="chill">Chill</option>
+                <option value="dance">Dance</option>
+                <option value="hardstyle">Hard</option>
+              </select>
+              <div className="pointer-events-none absolute inset-y-0 right-2 flex items-center px-2 text-gray-700">
+                <DropdownArrow />
+              </div>
+            </div>
+          </div>
+          <div className="py-8">
+            <label className="font-bold" htmlFor="genre">
+              Genre
+            </label>
+            <br />
+            <div className="relative inline-block w-full mt-3">
+              <select
+                className="block appearance-none w-full bg-white border border-gray-300 hover:border-gray-500 px-4 py-2 pr-8 rounded-md shadow leading-tight focus:outline-none focus:shadow-outline text-black"
+                id="genre"
+                name="genre"
+                onChange={handleChange}
+                value={formData.genre}
+              >
+                <option value="afrobeat">afrobeat</option>
+                <option value="classical">classical</option>
+                <option value="dancehall">dancehall</option>
+                <option value="electro">electro</option>
+                <option value="funk">funk</option>
+                <option value="soul">soul</option>
+                <option value="rock">rock</option>
+                <option value="pop">pop</option>
+                <option value="jazz">jazz</option>
+                <option value="hip-hop">hip-hop</option>
+              </select>
+              <div className="pointer-events-none absolute inset-y-0 right-2 flex items-center px-2 text-gray-700">
+                <DropdownArrow />
+              </div>
+            </div>
+            <br />
+          </div>
+          <div className="pt-8">
+            <label className="font-bold" htmlFor="country">
+              Country
+            </label>
+            <br />
+            <div className="relative inline-block w-full mt-3">
+              <select
+                className="block appearance-none w-full bg-white border border-gray-300 hover:border-gray-500 px-4 py-2 pr-8 rounded-md shadow leading-tight focus:outline-none focus:shadow-outline text-black"
+                id="country"
+                name="culture"
+                onChange={handleChange}
+                value={formData.culture}
+              >
+                <option value="brazil">brazil</option>
+                <option value="british">british</option>
+                <option value="french">french</option>
+                <option value="indian">indian</option>
+                <option value="iranian">iranian</option>
+                <option value="latin">latin</option>
+                <option value="malay">malay</option>
+                <option value="swedish">swedish</option>
+                <option value="turkish">turkish</option>
+                <option value="world-music">Any Place</option>
+              </select>
+              <div className="pointer-events-none absolute inset-y-0 right-2 flex items-center px-2 text-gray-700">
+                <DropdownArrow />
+              </div>
+            </div>
+          </div>
           <br />
-          <label className="ml-3" htmlFor="instrumentals">
-            Instrumentals
-            <input
-              className="m-3"
-              type="checkbox"
-              id="instrumentals"
-              name="instrumentals"
-              onChange={handleChange}
-            />
-            |
-          </label>
           <br />
-        </div>
-        <br />
-        <div data-aos="fade-up" data-aos-delay="400">
-          <button
-            className="btn text-white bg-purple-600 hover:bg-purple-700 w-full mb-4 sm:w-auto sm:mb-0"
-            onClick={handleClickGenerate}
+          <div className="flex items-strech">
+            <p className="flex items-center">|</p>
+            <label className="ml-3" htmlFor="songs">
+              Songs
+              <input
+                className="m-3"
+                type="checkbox"
+                id="songs"
+                name="songs"
+                onChange={handleChange}
+              />
+              |
+            </label>
+            <br />
+            <label className="ml-3" htmlFor="instrumentals">
+              Instrumentals
+              <input
+                className="m-3"
+                type="checkbox"
+                id="instrumentals"
+                name="instrumentals"
+                onChange={handleChange}
+              />
+              |
+            </label>
+            <br />
+          </div>
+          <br />
+          <div
+            className="grid grid-cols-2 gap-8 mb-12"
+            data-aos="fade-up"
+            data-aos-delay="400"
           >
-            Generate
-          </button>
-          <button
-            className="btn text-white bg-gray-600 hover:bg-gray-700 w-full mb-4 sm:w-auto sm:mb-0"
-            onClick={resetToInitialState}
-          >
-            Clear
-          </button>
-        </div>
-      </form>
-      {!isLoading &&
-      isClicked &&
-      isVisible &&
-      playlistId != '' &&
-      playlistId &&
-      playlistLink &&
-      playlistLink != '' ? (
-        <Suspense fallback={<div>Loading...</div>}>
-          <Playlist playlistLink={playlistLink} />
-        </Suspense>
-      ) : (
-        <></>
-      )}
-      {isLoading && (
-        <div>
-          <br />
-          <div>Loading...</div>
-        </div>
-      )}
-    </div>
+            <button
+              className="btn text-white bg-purple-600 hover:bg-purple-700 w-full mb-4 sm:w-auto sm:mb-0"
+              onClick={handleClickGenerate}
+            >
+              Generate
+            </button>
+            <button
+              className="btn text-white bg-gray-600 hover:bg-gray-700 w-full mb-4 sm:w-auto sm:mb-0"
+              onClick={resetToInitialState}
+            >
+              Clear
+            </button>
+          </div>
+        </form>
+        {!isLoading &&
+        isClicked &&
+        isVisible &&
+        playlistId != '' &&
+        playlistId &&
+        playlistLink &&
+        playlistLink != '' ? (
+          <Suspense fallback={<div>Loading...</div>}>
+            <Playlist playlistLink={playlistLink} />
+          </Suspense>
+        ) : (
+          <></>
+        )}
+        {isLoading && (
+          <div>
+            <br />
+            <div>Loading...</div>
+          </div>
+        )}
+      </div>
+    </main>
   );
 };
 
