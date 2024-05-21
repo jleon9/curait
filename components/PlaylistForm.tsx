@@ -203,7 +203,7 @@ const PlaylistParameters = () => {
           </div>
           <br />
           <br />
-          <div className="flex items-strech">
+          <div className="flex justify-items-center mx-12">
             <p className="flex items-center">|</p>
             <label className="ml-3" htmlFor="songs">
               Songs

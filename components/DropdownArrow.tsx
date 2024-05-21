@@ -1,7 +1,7 @@
 const DropdownArrow = () => {
   return (
     <svg
-      enable-background="new 0 0 26 26"
+      enableBackground="new 0 0 26 26"
       height="26px"
       id="Layer_1"
       version="1.1"
