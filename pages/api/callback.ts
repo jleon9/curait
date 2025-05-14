@@ -1,9 +1,7 @@
-"use client"
+"use client";
 import { NextApiRequest, NextApiResponse } from 'next';
 import axios from 'axios';
-import querystring from 'querystring';
 import { tokens } from '@/lib/Tokens';
-//import createPlaylist from '@/utils/createPlaylist';
 
 const client_id = process.env.SPOTIFY_ID;
 const client_secret = process.env.SPOTIFY_SECRET;
@@ -21,14 +19,15 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
   // Clear Cookie
   res.setHeader('Set-Cookie', `${stateKey}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/`);
 
+  const params = new URLSearchParams();
+  params.append('code', code as string);
+  params.append('redirect_uri', redirect_uri as string);
+  params.append('grant_type', 'authorization_code');
+
   const authOptions = {
     url: 'https://accounts.spotify.com/api/token',
     method: 'post',
-    data: querystring.stringify({
-      code: code,
-      redirect_uri: redirect_uri,
-      grant_type: 'authorization_code',
-    }),
+    data: params.toString(),
     headers: {
       'content-type': 'application/x-www-form-urlencoded',
       Authorization: 'Basic ' + Buffer.from(`${client_id}:${client_secret}`).toString('base64'),
@@ -41,23 +40,22 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     const access_token = data.access_token;
     const refresh_token = data.refresh_token;
     const authorization_code = code;
-    tokens.tokens = {access_token, refresh_token, authorization_code}
-    
+    tokens.tokens = { access_token, refresh_token, authorization_code };
+
     res.setHeader(
       'Set-Cookie',
       `access_token=${encodeURIComponent(access_token)}; HttpOnly; Secure; SameSite=Strict`
     );
-    console.log(Buffer.from(`${client_id}:${client_secret}`).toString('base64'))
+    console.log(Buffer.from(`${client_id}:${client_secret}`).toString('base64'));
 
-    //const test = "123"
-    console.log(tokens.tokens)
-    //console.log("Endpoint Reached!");
-    
-    //res.status(200).json({ test }); // Return access_token in the response
+    console.log(tokens.tokens);
+
     res.redirect('/');
-    
+
   } catch (error) {
     console.error('Error getting tokens:', error);
-    res.redirect('/#' + querystring.stringify({ error: 'invalid_token' }));
+    const errorParams = new URLSearchParams();
+    errorParams.append('error', 'invalid_token');
+    res.redirect('/#' + errorParams.toString());
   }
 };

@@ -3,14 +3,15 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import { addTracks } from '@/lib/spotify';
 
 export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse
+  req: any,
+  res: any
 ) {
   
   if (req.method === 'POST') {
     try {
       // Access form data from req.body
-      const { trackUriList, listId } = req.body;
+      const { trackUriList, listId } = JSON.parse(req.body);
+      console.log('ID', listId)
       // Perform server-side logic using the form data
       const response = await addTracks(trackUriList, listId);
       const updatedPlaylist = await response.json()

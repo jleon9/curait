@@ -65,8 +65,10 @@ const PlaylistParameters = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+  
   const handleSubmit = async () => {
     try {
+      if (!formData) return
       const formResponse = await fetch('/api/userInput/submitForm', {
         method: 'POST',
         headers: {
@@ -78,32 +80,36 @@ const PlaylistParameters = () => {
       if (formResponse.ok) {
         const recommendedData = await formResponse.json();
         //console.log('Server Response: ', recommendedData);
-        const newPlaylistResponse = await fetch('/api/playlists/newPlaylist');
-        const newPlaylistData = await newPlaylistResponse.json();
+        //const newPlaylistResponse = await fetch('/api/playlists/newPlaylist');
+        //const newPlaylistData = await newPlaylistResponse.json();
         //console.log('New Playlist Data:', newPlaylistData);
-        listId = newPlaylistData['id'] as string;
+       //listId = newPlaylistData['id'] as string;
 
-        const trackList = recommendedData.resultData.tracks;
+        const trackList = recommendedData.resultData.tracks.items;
+        //console.log(trackList)
         const trackUriList = trackList.map((track: any) => track.uri);
         //setAddTrackData({ uris: trackUriList, playlistId: listId });
         //console.log(JSON.stringify({ trackUriList, listId }))
 
         const updatePlaylist = await fetch('/api/playlists/addTracks', {
+          mode: 'no-cors',
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({ trackUriList, listId }),
+          body: JSON.stringify({ trackUriList, listId: '2cAg6cqWet493Zfkqk8X09' }),
         });
+        console.log(updatePlaylist)
       } else {
         // Handle error
         console.error('Error:', formResponse.statusText);
       }
     } catch (error) {
-      console.error('Error:', error);
+      console.log(error)
+      //console.error('Error:', error);
     }
-    setPlaylistId(listId);
-    setPlaylistLink(`https://open.spotify.com/embed/playlist/${listId}`);
+    setPlaylistId('2cAg6cqWet493Zfkqk8X09');
+    setPlaylistLink(`https://open.spotify.com/embed/playlist/2cAg6cqWet493Zfkqk8X09`);
     setIsLoading(false);
     //setIsVisible(true);
   };
@@ -134,7 +140,7 @@ const PlaylistParameters = () => {
               >
                 <option value="sleep">Sleep</option>
                 <option value="chill">Chill</option>
-                <option value="dance">Dance</option>
+                <option value="energetic">Energetic</option>
                 <option value="hardstyle">Hard</option>
               </select>
               <div className="pointer-events-none absolute inset-y-0 right-2 flex items-center px-2 text-gray-700">
@@ -177,7 +183,7 @@ const PlaylistParameters = () => {
               Country
             </label>
             <br />
-            <div className="relative inline-block w-full mt-3">
+            <div className="relative inline-block w-full mt-3 mb-12">
               <select
                 className="block appearance-none w-full bg-white border border-gray-300 hover:border-gray-500 px-4 py-2 pr-8 rounded-md shadow leading-tight focus:outline-none focus:shadow-outline text-black"
                 id="country"
@@ -190,7 +196,7 @@ const PlaylistParameters = () => {
                 <option value="french">french</option>
                 <option value="indian">indian</option>
                 <option value="iranian">iranian</option>
-                <option value="latin">latin</option>
+                <option value="colombie">colombie</option>
                 <option value="malay">malay</option>
                 <option value="swedish">swedish</option>
                 <option value="turkish">turkish</option>
@@ -201,7 +207,7 @@ const PlaylistParameters = () => {
               </div>
             </div>
           </div>
-          <br />
+          {/* <br />
           <br />
           <div className="flex justify-items-center mx-12">
             <p className="flex items-center">|</p>
@@ -230,7 +236,7 @@ const PlaylistParameters = () => {
             </label>
             <br />
           </div>
-          <br />
+          <br /> */}
           <div
             className="grid grid-cols-2 gap-8 mb-12"
             data-aos="fade-up"

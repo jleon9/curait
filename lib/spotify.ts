@@ -1,4 +1,23 @@
-import axios from 'axios';
+/**
+ * Gets all available genre seeds from Spotify API
+ * @returns Promise with the list of available genres
+ */
+export const getAvailableGenres = async () => {
+  const { access_token } = await getAccessToken();
+
+  const response = await fetch(
+    'https://api.spotify.com/v1/recommendations/available-genre-seeds',
+    {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${access_token}`,
+        'Content-Type': 'application/json',
+      },
+    }
+  );
+
+  return response.json(); // Returns { genres: string[] }
+};
 
 const getAccessToken = async () => {
   const refresh_token = process.env.SPOTIFY_REFRESH_TOKEN + '';
@@ -20,22 +39,6 @@ const getAccessToken = async () => {
   return response.json();
 };
 
-export const createPlaylist = async () => {
-  const { access_token } = await getAccessToken();
-  return await fetch('https://api.spotify.com/v1/me/playlists', {
-    method: 'POST',
-    headers: {
-      Authorization: `Bearer ${access_token}`,
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      name: 'Curaited For You',
-      description: 'Created with Curait',
-      public: false,
-    }),
-  });
-};
-
 export const getRecommendations = async (
   mood: string,
   genre: string,
@@ -44,63 +47,74 @@ export const getRecommendations = async (
   includeInstrumentals: boolean
 ) => {
   const { access_token } = await getAccessToken();
-  const apiUrl = 'https://api.spotify.com/v1/recommendations';
-  const seedGenres = `${culture},${genre},${mood},`;
-  let targetDanceability;
-  let targetEnergy;
-  let targetInstrumentalness;
-  let market = null;
+  console.log(access_token);
 
-  switch (mood) {
-    case 'sleep':
-      targetDanceability = 0;
-      targetEnergy = 0;
-    case 'chill':
-      targetDanceability = 0.3;
-      targetEnergy = 0.3;
-    case 'dance':
-      targetDanceability = 1;
-      targetEnergy = 0.9;
-    case 'hardstyle':
-      targetDanceability = 0.9;
-      targetEnergy = 1;
+  // Use the search endpoint instead of recommendations
+  const apiUrl = 'https://api.spotify.com/v1/search';
+
+  // Build query components based on parameters
+  let queryParts = [];
+
+  // Collect all genres including culture and mood-related genres
+  let allGenres = [];
+
+  // Add culture as a genre (this is important for the recommendations)
+  if (culture && culture.trim()) {
+    allGenres.push(culture.trim());
   }
 
-  switch (includeSongs || includeInstrumentals) {
-    case includeSongs && !includeInstrumentals:
-      targetInstrumentalness = 0;
-    case !includeSongs && includeInstrumentals:
-      targetInstrumentalness = 1;
-    default:
-      targetInstrumentalness = 0.5;
+  // Map mood to potential genre terms
+  if (mood) {
+    switch (mood) {
+      case 'sleep':
+        allGenres.push('ambient', 'sleep');
+        break;
+      case 'chill':
+        allGenres.push('chill', 'lounge');
+        break;
+    }
   }
 
-  switch (culture) {
-    case 'brazil':
-      market = 'BR';
-    case 'british':
-      market = 'GB';
-    case 'french':
-      market = 'FR';
-    case 'indian':
-      market = 'IN';
-    case 'iranian':
-      market = 'IR';
-    case 'latin':
-      market = 'CO';
-    case 'malay':
-      market = 'MY';
-    case 'swedish':
-      market = 'SE';
-    case 'turkish':
-      market = 'TR';
-    default:
-      market = null;
+  // // Format all genres as a combined query if we have any
+  if (allGenres.length > 0) {
+    const genreQuery = 'genre:' + genre;
+    queryParts.push(`(${genreQuery})`);
   }
 
-  const url = market
-    ? `${apiUrl}?market=${market}&ESseed_genres=${seedGenres}&target_danceability=${targetDanceability}&target_energy=${targetEnergy}&target_instrumentalness=${targetInstrumentalness}`
-    : `${apiUrl}?seed_genres=${seedGenres}&target_danceability=${targetDanceability}&target_energy=${targetEnergy}&target_instrumentalness=${targetInstrumentalness}`;
+  if (includeInstrumentals) {
+    // Only instrumentals
+    queryParts.push('instrumental');
+  }
+
+  // Add culture as a keyword for broader matching beyond just genres
+  if (culture) {
+    queryParts.push(culture);
+  }
+
+  // Add mood as a keyword for broader matching beyond just genres
+  if (mood) {
+    queryParts.push(mood);
+  }
+
+  // Add genres as a keyword for broader matching beyond just genres
+  if (genre) {
+    queryParts.push(genre);
+  }
+
+  // Combine all query parts
+  const query = queryParts.join(' ');
+
+  // Set limit for results
+  const limit = 20;
+
+  // Build the URL with appropriate parameters
+  let url = `${apiUrl}?q=${encodeURIComponent(
+    query
+  )}&type=track&limit=${limit}&include_external=audio`;
+
+  // Add additional parameters based on mood
+  // Note: Search API doesn't directly support target_danceability, target_energy, etc.,
+  // but we can add relevant terms to the search query based on the mood
 
   const spotifyResponse = await fetch(url, {
     method: 'GET',
@@ -109,19 +123,54 @@ export const getRecommendations = async (
       'Content-Type': 'application/json',
     },
   });
-  //console.log(spotifyResponse.json())
+
   return spotifyResponse;
 };
 
-export const addTracks = async (uris: ['string'], playlistId: string) => {
+export const addTracks = async (uris: string[], playlistId: string) => {
   const { access_token } = await getAccessToken();
-  const apiUrl = `https://api.spotify.com/v1/playlists/${playlistId}/tracks`;
+
+  // Step 1: Empty the playlist first
+  const deleteUrl = `https://api.spotify.com/v1/playlists/${playlistId}/tracks`;
+
+  // Get current tracks to create the tracks array for deletion
+  const getTracksUrl = `https://api.spotify.com/v1/playlists/${playlistId}/tracks?fields=items(track(uri))`;
+  const currentTracksResponse = await fetch(getTracksUrl, {
+    method: 'GET',
+    headers: {
+      Authorization: `Bearer ${access_token}`,
+      'Content-Type': 'application/json',
+    },
+  });
+
+  const currentTracks = await currentTracksResponse.json();
+
+  // If there are tracks in the playlist, remove them
+  if (currentTracks.items && currentTracks.items.length > 0) {
+    // Format tracks for deletion as required by the API
+    const tracksToDelete = {
+      tracks: currentTracks.items.map((item: any) => ({ uri: item.track.uri })),
+    };
+
+    // Delete all tracks from the playlist
+    await fetch(deleteUrl, {
+      method: 'DELETE',
+      headers: {
+        Authorization: `Bearer ${access_token}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(tracksToDelete),
+    });
+  }
+
+  // Step 2: Add the new tracks to the playlist
+  const addUrl = `https://api.spotify.com/v1/playlists/${playlistId}/tracks`;
   const requestBody = {
     uris: uris,
     position: 0,
   };
 
-  return fetch(apiUrl, {
+  return fetch(addUrl, {
     method: 'POST',
     headers: {
       Authorization: `Bearer ${access_token}`,

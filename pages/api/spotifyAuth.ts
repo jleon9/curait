@@ -1,7 +1,6 @@
 // pages/api/login.ts
 
 import { NextApiRequest, NextApiResponse } from 'next';
-import querystring from 'querystring';
 //import { tokens } from '../../lib/Tokens';
 
 const client_id = process.env.SPOTIFY_ID;
@@ -13,14 +12,13 @@ export default (req: NextApiRequest, res: NextApiResponse) => {
   res.setHeader('Set-Cookie', `${stateKey}=${state}; Path=/`);
 
   const scope = 'playlist-modify-public playlist-modify-private';
-  const authorizationUrl =
-    'https://accounts.spotify.com/authorize?' +
-    querystring.stringify({
-      response_type: 'code',
-      client_id: client_id,
-      scope: scope,
-      redirect_uri: redirect_uri,
-      state: state,
-    });
+  const params = new URLSearchParams();
+  params.append('response_type', 'code');
+  params.append('client_id', client_id as string);
+  params.append('scope', scope);
+  params.append('redirect_uri', redirect_uri as string);
+  params.append('state', state);
+
+  const authorizationUrl = 'https://accounts.spotify.com/authorize?' + params.toString();
   res.redirect(authorizationUrl);
 };
