@@ -23,46 +23,6 @@ const spotifyEmbedStyles = `
   }
 `;
 
-// Configure EME and suppress specific warnings
-const configureEME = () => {
-  if (typeof window === 'undefined') return;
-
-  // Handle Media Key System Access warnings
-  if (window.navigator?.requestMediaKeySystemAccess) {
-    const original = window.navigator.requestMediaKeySystemAccess;
-    window.navigator.requestMediaKeySystemAccess = (keySystem, configs) => {
-      const modifiedConfigs = (configs as MediaKeySystemConfiguration[]).map(
-        (config) => ({
-          ...config,
-          audioCapabilities: config.audioCapabilities?.map((cap) =>
-            cap.robustness ? cap : { ...cap, robustness: 'SW_SECURE_CRYPTO' }
-          ),
-          videoCapabilities: config.videoCapabilities?.map((cap) =>
-            cap.robustness ? cap : { ...cap, robustness: 'SW_SECURE_CRYPTO' }
-          ),
-        })
-      );
-      return original.call(navigator, keySystem, modifiedConfigs);
-    };
-  }
-
-  // Filter out third-party cookie warnings
-
-  const originalWarn = console.warn;
-  console.warn = (...args) => {
-    const isCookieWarning = args.some(
-      (arg) =>
-        typeof arg === 'string' &&
-        (arg.includes('third-party cookies') ||
-          arg.includes('Chrome is moving towards'))
-    );
-    if (!isCookieWarning) originalWarn.apply(console, args);
-  };
-  return () => {
-    console.warn = originalWarn;
-  };
-};
-
 // Use dynamic import with explicit loading state and SSR disabled to prevent hydration issues
 const Playlist = dynamic(() => import('../components/Playlist'), {
   loading: () => <p>Loading playlist...</p>,
@@ -84,13 +44,6 @@ const PlaylistParameters = () => {
       includeInstrumentals: false,
     },
   });
-
-  // Configure EME and warning suppressions on component mount
-  useEffect(() => {
-    // Run configuration and get cleanup function if any
-    const cleanup = configureEME();
-    return cleanup || undefined;
-  }, []);
 
   // Fixed playlist ID - moved from inside function to constant
   const PLAYLIST_ID = '2cAg6cqWet493Zfkqk8X09';
