@@ -105,7 +105,7 @@ export const getRecommendations = async (
   const query = queryParts.join(' ');
 
   // Set limit for results
-  const limit = 20;
+  const limit = 50;
 
   // Build the URL with appropriate parameters
   let url = `${apiUrl}?q=${encodeURIComponent(

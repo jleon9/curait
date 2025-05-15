@@ -9,9 +9,11 @@ export default async function handler(
   
   if (req.method === 'POST') {
     try {
+      console.log('ID', req.body)
+
       // Access form data from req.body
-      const { trackUriList, listId } = JSON.parse(req.body);
-      console.log('ID', listId)
+      const { trackUriList, listId } = req.body;
+      
       // Perform server-side logic using the form data
       const response = await addTracks(trackUriList, listId);
       const updatedPlaylist = await response.json()
