@@ -230,7 +230,7 @@ const PlaylistParameters = () => {
       'french',
       'indian',
       'iranian',
-      'colombie',
+      'colombia',
       'malay',
       'swedish',
       'turkish',
