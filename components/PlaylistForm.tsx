@@ -2,6 +2,7 @@
 import dynamic from 'next/dynamic';
 import { Suspense, useEffect, useState } from 'react';
 import DropdownArrow from './DropdownArrow';
+import SpinnerWave from './Spinner';
 
 // Style for Spotify embed container to ensure proper sizing and visibility of tracks
 const spotifyEmbedStyles = `
@@ -122,12 +123,7 @@ const PlaylistParameters = () => {
           (track: any) => track.uri
         );
 
-        const trackIds = new Set(); // temp variable to keep track of accepted ids
-        const uniqueTrackUris = trackUris.filter(
-          ({ id }: { id: string } & any) =>
-            !trackIds.has(id) && trackIds.add(id)
-        );
-        const trackUriList = uniqueTrackUris
+        const trackUriList = [...new Set(trackUris)]
           .sort(() => 0.5 - Math.random())
           .slice(0, 20);
 
@@ -326,17 +322,11 @@ const PlaylistParameters = () => {
 
         {/* Playlist display logic with error handling */}
         {state.isLoading ? (
-          <div className="mt-8 text-center">
-            <div className="inline-block animate-pulse">
-              Loading your playlist...
-            </div>
-          </div>
+          <SpinnerWave message={'Loading your playlist...'} />
         ) : state.isVisible && state.playlistLink ? (
           <div className="mt-8 w-full max-w-xl">
             <Suspense
-              fallback={
-                <div className="text-center">Loading playlist player...</div>
-              }
+              fallback={<SpinnerWave message={'Loading playlist player...'} />}
             >
               <div
                 className="spotify-embed-container"
