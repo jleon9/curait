@@ -1,16 +1,19 @@
 interface PlaylistProps {
-    playlistLink: string
+  playlistLink: string;
 }
 
 const Playlist = (props: PlaylistProps) => {
   return (
     <iframe
+      style={{"borderRadius":"12px"}}
       src={props.playlistLink}
-      width="300"
-      height="380"
-      allow="encrypted-media"
-      sandbox="allow-scripts allow-same-origin allow-popups"
+      width="100%"
+      height="352"
+      frameBorder="0"
+      allowFullScreen={false}
+      allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+      loading="lazy"
     ></iframe>
   );
 };
-export default Playlist
+export default Playlist;

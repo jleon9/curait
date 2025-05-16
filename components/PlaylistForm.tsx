@@ -46,7 +46,7 @@ const PlaylistParameters = () => {
   });
 
   // Fixed playlist ID - moved from inside function to constant
-  const PLAYLIST_ID = '2cAg6cqWet493Zfkqk8X09';
+  const PLAYLIST_ID = process.env.NEXT_PUBLIC_PLAYLIST_ID ?? '';
 
   // Handle form submission
   const handleSubmit = async (e: any) => {
