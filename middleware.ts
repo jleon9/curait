@@ -21,6 +21,10 @@ export async function middleware(req: NextRequest) {
       'Access-Control-Allow-Headers',
       'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Authorization, Date, X-Api-Version'
     );
+    response.headers.append(
+        'Permissions-Policy',
+        'encrypted-media=*'
+      );
   }
 
   return response;
