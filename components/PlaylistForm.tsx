@@ -132,7 +132,7 @@ const PlaylistParameters = () => {
       isLoading: false,
       isVisible: true,
       playlistId: PLAYLIST_ID,
-      playlistLink: `https://player.spotify.com/embed/playlist/${PLAYLIST_ID}`,
+      playlistLink: `https://open.spotify.com/embed/playlist/${PLAYLIST_ID}`,
     }));
   };
 
