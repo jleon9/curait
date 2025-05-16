@@ -34,7 +34,6 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     },
   };
 
-  try {
     const { data } = await axios(authOptions);
 
     const access_token = data.access_token;
@@ -52,10 +51,4 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 
     res.redirect('/');
 
-  } catch (error) {
-    console.error('Error getting tokens:', error);
-    const errorParams = new URLSearchParams();
-    errorParams.append('error', 'invalid_token');
-    res.redirect('/#' + errorParams.toString());
-  }
 };

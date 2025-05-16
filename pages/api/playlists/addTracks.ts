@@ -8,7 +8,6 @@ export default async function handler(
 ) {
   
   if (req.method === 'POST') {
-    try {
       console.log('ID', req.body)
 
       // Access form data from req.body
@@ -20,12 +19,6 @@ export default async function handler(
       //console.log(updatedPlaylist)
       // Send a response back to the client
       res.status(200).json({ success: true, updatedPlaylist });
-    } catch (error) {
-      console.error('Error:', error);
-      res
-        .status(500)
-        .json({ success: false, message: 'Internal Server Error' });
-    }
   } else {
     // Return an error for unsupported HTTP methods
     res.status(405).json({ success: false, message: 'Method Not Allowed' });

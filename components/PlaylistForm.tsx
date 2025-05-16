@@ -55,75 +55,61 @@ const PlaylistParameters = () => {
     // Update loading state
     setState((prev) => ({ ...prev, isLoading: true }));
 
-    try {
-      // Submit form data to API
-      const formResponse = await fetch('/api/userInput/submitForm', {
+    // Submit form data to API
+    const formResponse = await fetch('/api/userInput/submitForm', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+      },
+      body: JSON.stringify(state.formData),
+      credentials: 'same-origin', // Add credentials for proper cookie handling
+    });
+
+    if (formResponse.ok) {
+      const recommendedData = await formResponse.json();
+
+      // Process track data
+
+      const trackUris: string[] = recommendedData.resultData.tracks.items.map(
+        (track: any) => track.uri
+      );
+
+      const trackUriList = [...new Set(trackUris)]
+        .sort(() => 0.5 - Math.random())
+        .slice(0, 20);
+
+      // Log tracks (useful for debugging but can be removed in production)
+      console.debug('Generated playlist tracks:', trackUriList.length);
+
+      // Add tracks to playlist - fixed CORS issues by removing no-cors mode
+      const updateResponse = await fetch('/api/playlists/addTracks', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          // Ensuring CORS headers are respected
           Accept: 'application/json',
         },
-        body: JSON.stringify(state.formData),
+        body: JSON.stringify({
+          trackUriList,
+          listId: PLAYLIST_ID,
+        }),
         credentials: 'same-origin', // Add credentials for proper cookie handling
       });
 
-      if (formResponse.ok) {
-        const recommendedData = await formResponse.json();
-
-        // Process track data
-
-        const trackUris: string[] = recommendedData.resultData.tracks.items.map(
-          (track: any) => track.uri
+      if (!updateResponse.ok) {
+        console.warn(
+          'Warning: Playlist update response was not OK:',
+          updateResponse.status
         );
-
-        const trackUriList = [...new Set(trackUris)]
-          .sort(() => 0.5 - Math.random())
-          .slice(0, 20);
-
-        // Log tracks (useful for debugging but can be removed in production)
-        console.debug('Generated playlist tracks:', trackUriList.length);
-
-        try {
-          // Add tracks to playlist - fixed CORS issues by removing no-cors mode
-          const updateResponse = await fetch('/api/playlists/addTracks', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              // Ensuring CORS headers are respected
-              Accept: 'application/json',
-            },
-            body: JSON.stringify({
-              trackUriList,
-              listId: PLAYLIST_ID,
-            }),
-            credentials: 'same-origin', // Add credentials for proper cookie handling
-          });
-
-          if (!updateResponse.ok) {
-            console.warn(
-              'Warning: Playlist update response was not OK:',
-              updateResponse.status
-            );
-          }
-        } catch (updateError) {
-          console.error('Error updating playlist:', updateError);
-          // Continue with showing the playlist even if update fails
-        }
-      } else {
-        console.error(
-          'API response error:',
-          formResponse.status,
-          formResponse.statusText
-        );
-        throw new Error(`API responded with status: ${formResponse.status}`);
       }
-    } catch (error) {
-      console.error('Error generating playlist:', error);
-      setState((prev) => ({ ...prev, isLoading: false }));
-      alert(
-        'Sorry, there was a problem generating your playlist. Please try again.'
+    } else {
+      console.error(
+        'API response error:',
+        formResponse.status,
+        formResponse.statusText
       );
-      return; // Don't proceed to show playlist if there was an error
+      throw new Error(`API responded with status: ${formResponse.status}`);
     }
 
     // Update state with playlist information
@@ -278,16 +264,12 @@ const PlaylistParameters = () => {
           <SpinnerWave message={'Loading your playlist...'} />
         ) : state.isVisible && state.playlistLink ? (
           <div className="mt-8 w-full max-w-xl">
-            <Suspense
-              fallback={<SpinnerWave message={'Loading playlist player...'} />}
-            >
               <div
                 className="spotify-embed-container"
                 style={{ height: '380px', width: '100%' }}
               >
                 <Playlist playlistLink={state.playlistLink} />
               </div>
-            </Suspense>
           </div>
         ) : null}
       </div>
