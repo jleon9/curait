@@ -1,4 +1,5 @@
-﻿import React, { useEffect } from 'react';
+﻿'use client'
+import React, { useEffect } from 'react';
 import AOS from 'aos';
 
 export default function DefaultLayout({
