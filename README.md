@@ -33,26 +33,18 @@ To run the frontend part of this application (assuming you have the backend set 
 
 1.  **Clone the repository:**
     ```bash
-    git clone <repository_url>
-    cd <your_project_directory>
+    git clone https://github.com/jleon9/curait
+    cd curait
     ```
 
 2.  **Install dependencies:**
     ```bash
-    npm install
-    # or
     yarn install
-    # or
-    pnpm install
     ```
 
 3.  **Run the development server:**
     ```bash
-    npm run dev
-    # or
-    yarn dev
-    # or
-    pnpm dev
+    yarn run dev
     ```
 
 4.  **Open your browser** and navigate to `http://localhost:3000` (or the port your development server is running on).
