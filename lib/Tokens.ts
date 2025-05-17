@@ -1,5 +1,5 @@
 // types/global.d.ts
-
+'use server'
 interface Tokens {
   access_token?: string;
   refresh_token?: string;

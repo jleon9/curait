@@ -1,4 +1,3 @@
-"use client";
 import { NextApiRequest, NextApiResponse } from 'next';
 import axios from 'axios';
 import { tokens } from '@/lib/Tokens';
