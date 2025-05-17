@@ -1,3 +1,4 @@
+'use server'
 /**
  * Gets all available genre seeds from Spotify API
  * @returns Promise with the list of available genres
